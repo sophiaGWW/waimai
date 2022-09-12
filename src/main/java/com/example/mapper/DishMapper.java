@@ -1,0 +1,12 @@
+package com.example.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.entity.Dish;
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * @create 2022-09-06 2:12
+ */
+@Mapper
+public interface DishMapper extends BaseMapper<Dish> {
+}
