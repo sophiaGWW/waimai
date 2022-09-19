@@ -14,6 +14,9 @@ import com.example.service.SetmealDishService;
 import com.example.service.SetmealService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +38,7 @@ public class SetmealController {
     @Autowired
     private CategoryService categoryService;
 
+    @CacheEvict(value = "setmealCache",allEntries = true)
     @PostMapping
     public R<String> save(@RequestBody SetmealDto setmealDto){
             setmealDishService.saveWithSetmealDish(setmealDto);
@@ -81,7 +85,7 @@ public class SetmealController {
 
         return R.success(dtoPage);
     }
-
+    @CacheEvict(value = "setmealCache",allEntries = true)
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids){
 
@@ -97,7 +101,8 @@ public class SetmealController {
        return null;
     }*/
 
-    @GetMapping("/list")
+  @Cacheable(value = "setmealCache",key = "#categoryId + '_' + #status")
+  @GetMapping("/list")
     public R<List<Setmeal>> get(Long categoryId,Integer status){
         //根据categoryid查询套餐集合
         LambdaQueryWrapper<Setmeal> lqw = new LambdaQueryWrapper<>();
